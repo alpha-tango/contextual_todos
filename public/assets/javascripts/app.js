@@ -1,3 +1,16 @@
+$('#change_cat').change(function() {
+  var selectedValue = $(this).val();
+
+  switch(selectedValue) {
+    case "new category":
+      alert("This works!");
+      break;
+    default:
+      alert("This is the default!");
+      break;
+  }
+});
+
 // $(function () {
 //   $('.add-todo').on('submit', function(event) {
 //     event.preventDefault();
@@ -11,8 +24,8 @@
 //       type: 'POST',
 //       data: data,
 //       success: function () {
-//         var $listItem = $('<li>').addClass('todo');
-//         var $label = $('<label>')
+//         var $listItem = $('<li>').addClass('todo'),
+//             $label = $('<label>');
 //         .addClass('label label--checkbox')
 //         .text(body);
 //         var $input = $('<input>')

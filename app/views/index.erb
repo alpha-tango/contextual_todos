@@ -17,7 +17,7 @@
           <%= todo.body %>
         </label>
         <form action='/categories' method='post'>
-          <select name='categories'>
+          <select id="change_cat" name='categories'>
             <% @categories.each do |cat| %>
               <%if cat == todo.category %>
                 <option value ="<%= cat %>" selected><%= cat %></option>
@@ -25,6 +25,7 @@
                 <option value ="<%= cat %>"><%= cat %></option>
               <% end %>
             <% end %>
+                <option value ="new category">new category</option>
           </select>
         </form>
       </li>
