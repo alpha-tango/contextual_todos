@@ -1,0 +1,23 @@
+<h1>Todos</h1>
+
+<form class="add-todo" action='/todos' method='post'>
+  <input name="todo[body]" type="text" placeholder="What do you want to get done?">
+</form>
+
+
+<% @categories.each do |category| %>
+  <h2><%= category || "uncategorized"%></h2>
+  <ul class="todo-list">
+  <% @todos.each do |todo| %>
+    <% if todo.category == category %>
+      <li class="todo <%= 'todo--complete' if todo.complete? %>">
+        <label class="label label--checkbox">
+          <input type="checkbox"
+            class="checkbox <%= 'checkbox--checked' if todo.complete? %>">
+          <%= todo.body %>
+        </label>
+      </li>
+    <% end %>
+  <% end %>
+  </ul>
+<% end %>
