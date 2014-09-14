@@ -1,30 +1,33 @@
 require 'pry'
 
-sample = "Call mom about package arrival"
+task = "Call mom about package arrival"
 
-strings = [
-            "Call mom about package arrival",
-            "Send Rory email",
-            "Schedule groceries delivery",
-            "Research Javascript",
-            "Buy bday present for Melly",
-            "Find Maureen's card"
+tasks = [
+            {body: "Call mom about package arrival", context: 1},
+            {body:"Send Rory email", context: 2},
+            {body: "Schedule groceries delivery", context: 2},
+            {body: "Research Javascript", context: 2},
+            {body: "Buy bday present for Melly", context: 3},
+            {body: "Find Maureen's card", context: 4}
           ]
 @words = ["call", "mom", "buy", "groceries", "schedule", "research", "find", "melly"]
 
+################
+# METHODS
+################
 
 def arrayify(string)
   string.downcase.split(' ').uniq
 end
 
 def vectorize(string, word_array)
-  arrayify(string)
+  elements = arrayify(string)
   vector = word_array.map do |word|
-    string_elements.include?(word) ? 1 : 0
+    elements.include?(word) ? 1 : 0
   end
 end
 
-def create_neighbors (K, d)
+def create_neighbors (k, d)
   neighbors = []
 
   K.times do
@@ -33,6 +36,8 @@ def create_neighbors (K, d)
       random_neighbor << rand()
     end
     neighbors << random_neighbor
+  end
+  neighbors
 end
 
 def euclidean_distance(array, same_length_array)
@@ -42,58 +47,60 @@ def euclidean_distance(array, same_length_array)
   Math.sqrt(sum)
 end
 
-def least_value_key(hash)
-  sorted_array = array.sort_by { |key, value| value}
+def least_value_key(an_hash)
+  sorted_array = an_hash.sort_by { |key, value| value}
   sorted_array.first.first
 end
 
+#####################
+# Stuff
+###################
+
 d = @words.length
-n = strings.length
+n = tasks.length
 K = n/2
 
-@vectors = []
-
-strings.each do |string|
-  @vectors << vectorize(string, @words)
+tasks.each do |task|
+  task[:vector] = vectorize(task[:body], @words)
 end
-
-d = @words.length
-n = strings.length
-K = n/2
 
 @cluster_centers = create_neighbors(K, d)
-@vectors_with_knn = {}
-@vectors.each do |vector|
+@tasks_with_knn = {}
+
+tasks.each do |task|
   distances = {}
   @cluster_centers.each_with_index do |center, i|
-    distances[i] = euclidean_distance(vector, center)
+    distances[i] = euclidean_distance(task[:vector], center)
   end
-  @vectors_with_knn[vector] = least_value_key(distances)
-  #this is problematic because if have two of same vector will overwrite
+  @tasks_with_knn[task] = @cluster_centers[least_value_key(distances)]
 end
 
-@knns_with_vectors = {}
-@vectors_with_knn.each do |vector,knn|
-  @knns_with_vectors[knn] = []
+#stopped here with refactoring!
+
+@knns_with_tasks = {}
+@tasks_with_knn.each do |task,knn|
+  @knns_with_tasks[knn] = []
 end
 
-@vectors_with_knn.each do |vector,knn|
-  @knns_with_vectors[knn] << vector
+@tasks_with_knn.each do |task,knn|
+  @knns_with_tasks[knn] << task
 end
 
-@knns_with_vectors.each do |knn, vectors|
-  n = vectors.length
-  if n > 1
-    start = vectors.pop
-    sum = start.zip(*vectors)
+@knns_with_tasks.each do |knn, assoc|
+  n = assoc.length
+  # THIS IS NOW BROKEN
+  # if n > 1
+  #   assoc.each do |task|
+  #   start = vectors.pop
+  #   sum = start.zip(*vectors)
+  #
+  #   avg = sum.map do |x|
+  #     x.reduce(:+).to_f / n
+  #   end
 
-    avg = sum.map do |x|
-      x.reduce(:+).to_f / n
-    end
-
-    @cluster_centers[knn] = avg
+    # @cluster_centers[knn] = avg
   else
-    @cluster_centers[knn] = vectors
+    # @cluster_centers[knn] = vectors
   end
 end
 
