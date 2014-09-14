@@ -13,12 +13,43 @@ strings = [
 @words = ["call", "mom", "buy", "groceries", "schedule", "research", "find", "melly"]
 
 
+def arrayify(string)
+  string.downcase.split(' ').uniq
+end
+
 def vectorize(string, word_array)
-  string_elements = string.downcase.split(' ').uniq
+  arrayify(string)
   vector = word_array.map do |word|
     string_elements.include?(word) ? 1 : 0
   end
 end
+
+def create_neighbors (K, d)
+  neighbors = []
+
+  K.times do
+    random_neighbor = []
+    d.times do
+      random_neighbor << rand()
+    end
+    neighbors << random_neighbor
+end
+
+def euclidean_distance(array, same_length_array)
+  zipped_array = array.zip(same_length_array)
+  dimensional_array = zipped_array.map { |x| (x[1] - x[0])**2}
+  sum = dimensional_array.reduce(:+)
+  Math.sqrt(sum)
+end
+
+def least_value_key(hash)
+  sorted_array = array.sort_by { |key, value| value}
+  sorted_array.first.first
+end
+
+d = @words.length
+n = strings.length
+K = n/2
 
 @vectors = []
 
@@ -30,27 +61,14 @@ d = @words.length
 n = strings.length
 K = n/2
 
-@cluster_centers = []
-
-K.times do
-  cluster_center = []
-  d.times do
-    cluster_center << rand()
-  end
-  @cluster_centers << cluster_center
-end
-
+@cluster_centers = create_neighbors(K, d)
 @vectors_with_knn = {}
-
 @vectors.each do |vector|
   distances = {}
   @cluster_centers.each_with_index do |center, i|
-    dist = vector.zip(center)
-    this = dist.map {|x| (x[1] - x[0])**2}.reduce(:+)
-    distances[i] = Math.sqrt(this)
+    distances[i] = euclidean_distance(vector, center)
   end
-  sorted_distances = distances.sort_by {|key, value| value }
-  @vectors_with_knn[vector] = sorted_distances.first.first
+  @vectors_with_knn[vector] = least_value_key(distances)
   #this is problematic because if have two of same vector will overwrite
 end
 
