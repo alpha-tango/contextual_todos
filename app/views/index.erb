@@ -15,7 +15,7 @@
         <%= task.body %>
       </label>
       <form action='/categories' method='post'>
-        <select id="change_cat" name='categories'>
+        <select class="change_cat" name='categories'>
           <% @contexts.each do |cat| %>
             <%if cat == task.context %>
               <option value ="<%= cat.name %>" selected><%= cat.name %></option>
@@ -41,7 +41,7 @@
           <%= task.body %>
         </label>
         <form action='/categories' method='post'>
-          <select id="change_cat" name='categories'>
+          <select class="change_cat" name='categories'>
             <% @contexts.each do |cat| %>
               <%if cat == task.context %>
                 <option value ="<%= cat.name %>" selected><%= cat.name %></option>
