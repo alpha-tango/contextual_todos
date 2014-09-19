@@ -1,25 +1,58 @@
 <h1>Todos</h1>
 
-<form class="add-todo" action='/todos' method='post'>
+<form class="add-todo" action='/' method='post'>
   <input name="todo[body]" type="text" placeholder="What do you want to get done?">
 </form>
 
+<h2>uncategorized</h2>
+<ul class="todo-list">
+<% @tasks.each do |task| %>
+  <% if task.context == nil %>
+    <li class="todo <%= 'todo--complete' if task.complete? %>">
+      <label class="label label--checkbox">
+        <input type="checkbox"
+          class="checkbox <%= 'checkbox--checked' if task.complete? %>">
+        <%= task.body %>
+      </label>
+      <form action='/categories' method='post'>
+        <select id="change_cat" name='categories'>
+          <% @contexts.each do |cat| %>
+            <%if cat == task.context %>
+              <option value ="<%= cat.name %>" selected><%= cat.name %></option>
+            <% else %>
+              <option value ="<%= cat.name %>"><%= cat.name %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </form>
+    </li>
+  <% end %>
+  <% end %>
 
 <% @contexts.each do |context| %>
   <h2><%= context.name || "uncategorized"%></h2>
   <ul class="todo-list">
-    <%if @tasks != nil %>
-    <% @tasks.each do |task| %>
-      <% if task.context == context %>
-        <li class="todo <%= 'todo--complete' if todo.complete? %>">
-          <label class="label label--checkbox">
-            <input type="checkbox"
-              class="checkbox <%= 'checkbox--checked' if todo.complete? %>">
-            <%= task.body %>
-          </label>
-        </li>
-      <% end %>
+  <% @tasks.each do |task| %>
+    <% if task.context == context %>
+      <li class="todo <%= 'todo--complete' if task.complete? %>">
+        <label class="label label--checkbox">
+          <input type="checkbox"
+            class="checkbox <%= 'checkbox--checked' if task.complete? %>">
+          <%= task.body %>
+        </label>
+        <form action='/categories' method='post'>
+          <select id="change_cat" name='categories'>
+            <% @contexts.each do |cat| %>
+              <%if cat == task.context %>
+                <option value ="<%= cat.name %>" selected><%= cat.name %></option>
+              <% else %>
+                <option value ="<%= cat.name %>"><%= cat.name %></option>
+              <% end %>
+            <% end %>
+          </select>
+        </form>
+      </li>
     <% end %>
-    <% end %>
+  <% end %>
   </ul>
 <% end %>

@@ -27,9 +27,10 @@ get '/' do
 end
 
 post '/' do
-
   # @words = #select x number of words ordered by desc count
   # context = categorize(params[:body], @words)
-  # @task = Task.new() #body: params[:body]  etc
-  # @tasks = Task.all
+  @task = Task.create(params[:todo])
+  @tasks = Task.all
+  @contexts = Context.all
+  erb :index
 end
