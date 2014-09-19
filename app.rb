@@ -1,5 +1,7 @@
 require 'sinatra'
 require 'sinatra/activerecord'
+require 'pry'
+require 'sinatra/reloader'
 
 ###################
 # Configuration
@@ -18,7 +20,9 @@ end
 #####################
 
 get '/' do
-  @title = "Hello World"
+  @contexts = Context.all
+  @tasks = Task.all
+  binding.pry
   erb :index
 end
 
@@ -29,7 +33,3 @@ post '/' do
   # @task = Task.new() #body: params[:body]  etc
   # @tasks = Task.all
 end
-
-#####################
-# Methods
-#####################

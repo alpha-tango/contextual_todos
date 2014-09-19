@@ -67,45 +67,42 @@ end
 @cluster_centers = create_neighbors(K, d)
 @tasks_with_knn = {}
 
-tasks.each do |task|
-  distances = {}
-  @cluster_centers.each_with_index do |center, i|
-    distances[i] = euclidean_distance(task[:vector], center)
+15.times do
+  tasks.each do |task|
+    distances = {}
+    @cluster_centers.each_with_index do |center, i|
+      distances[i] = euclidean_distance(task[:vector], center)
+    end
+    @tasks_with_knn[task] = @cluster_centers[least_value_key(distances)]
   end
-  @tasks_with_knn[task] = @cluster_centers[least_value_key(distances)]
-end
 
-#stopped here with refactoring!
-
-@knns_with_tasks = {}
-@tasks_with_knn.each do |task,knn|
-  @knns_with_tasks[knn] = []
-end
-
-@tasks_with_knn.each do |task,knn|
-  @knns_with_tasks[knn] << task
-end
-
-@knns_with_tasks.each do |knn, assoc|
-  n = assoc.length
-  # THIS IS NOW BROKEN
-  # if n > 1
-  #   assoc.each do |task|
-  #   start = vectors.pop
-  #   sum = start.zip(*vectors)
-  #
-  #   avg = sum.map do |x|
-  #     x.reduce(:+).to_f / n
-  #   end
-
-    # @cluster_centers[knn] = avg
-  else
-    # @cluster_centers[knn] = vectors
+  @knns_with_tasks = {}
+  @tasks_with_knn.each do |task,knn|
+    @knns_with_tasks[knn] = []
   end
-end
 
-binding.pry
-#
-#   @vectors.each do |vector|
-#     #recursion until there are no more changes
-#   end
+  @tasks_with_knn.each do |task,knn|
+    @knns_with_tasks[knn] << task
+  end
+
+  @knns_with_tasks.each do |knn, assoc|
+    n = assoc.length
+    if n > 1
+      start = assoc.pop[:vector]
+      vectors = []
+      assoc.each do |task|
+        vectors << task[:vector]
+      end
+      sum = start.zip(*vectors)
+      avg = sum.map do |x|
+        x.reduce(:+).to_f / n
+      end
+      i = @cluster_centers.index(knn)
+        @cluster_centers[i] = avg
+    else
+      i = @cluster_centers.index(knn)
+      @cluster_centers[i] = assoc.pop[:vector]
+    end
+  end
+  puts "#{@cluster_centers}"
+end

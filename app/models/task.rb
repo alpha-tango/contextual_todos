@@ -12,5 +12,4 @@ class Task < ActiveRecord::Base
       elements.include?(word) ? 1 : 0
     end
   end
-
 end
