@@ -14,16 +14,17 @@
           class="checkbox <%= 'checkbox--checked' if task.complete? %>">
         <%= task.body %>
       </label>
-      <form action='/categories' method='post'>
+      <form action=<%="/#{task.id}"%> method='post'>
         <select class="change_cat" name='categories'>
           <% @contexts.each do |cat| %>
             <%if cat == task.context %>
-              <option value ="<%= cat.name %>" selected><%= cat.name %></option>
+              <option value ="<%= cat.id %>" selected><%= cat.name %></option>
             <% else %>
-              <option value ="<%= cat.name %>"><%= cat.name %></option>
+              <option value ="<%= cat.id %>"><%= cat.name %></option>
             <% end %>
           <% end %>
         </select>
+        <input type="submit" value="submit">
       </form>
     </li>
   <% end %>
@@ -50,6 +51,7 @@
               <% end %>
             <% end %>
           </select>
+          <input type="submit" value="submit">
         </form>
       </li>
     <% end %>

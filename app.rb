@@ -22,7 +22,6 @@ end
 get '/' do
   @contexts = Context.all
   @tasks = Task.all
-  binding.pry
   erb :index
 end
 
@@ -33,4 +32,11 @@ post '/' do
   @tasks = Task.all
   @contexts = Context.all
   erb :index
+end
+
+post '/:id' do
+  @task=Task.find_by(id: params[:id])
+  @task.update(context_id: params[:categories])
+
+  redirect '/'
 end
