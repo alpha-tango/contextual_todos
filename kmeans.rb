@@ -10,7 +10,6 @@ tasks = [
             {body: "Buy bday present for Melly", context: 3},
             {body: "Find Maureen's card", context: 4}
           ]
-@words = ["call", "mom", "buy", "groceries", "schedule", "research", "find", "melly"]
 
 ################
 # METHODS
