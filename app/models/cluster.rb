@@ -7,18 +7,19 @@ class Cluster
   end
 
   def recenter!
-    old_center = @center
+    old_center = center
     #@ center = some array of 0 points
 
-    sum = @points.each do |point|
+    sum = points.each do |point|
       point.each_with_index do |coord, i|
-        @center[i] += coord
+        center[i] += coord
       end
     end
 
     average = sum.each do |coord|
-      coord / @points.length
+      coord / points.length
     end
 
-    @center = average
+    center = average
+    old_center.dist_to(center)
   end
