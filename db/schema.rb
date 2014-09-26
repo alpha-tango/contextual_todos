@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140911231706) do
+ActiveRecord::Schema.define(version: 20140925211933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,8 +37,8 @@ ActiveRecord::Schema.define(version: 20140911231706) do
   end
 
   create_table "words", force: true do |t|
-    t.string  "word",  null: false
-    t.integer "count", null: false
+    t.string  "element", null: false
+    t.integer "times",   null: false
   end
 
 end

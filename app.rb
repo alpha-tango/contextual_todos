@@ -29,36 +29,38 @@ post '/' do
   @task = Task.new(params[:todo])
   @tasks = Task.all
   @contexts = Context.all
-  @words = build_comparison(@tasks)
+  words = Word.all
+  @words = []
+  words.each do |x|
+    @words << x.element
+  end
 
   d = @words.length
-
-  k = n/3  #this will give us one cluster for every three tasks
+  k = @tasks.length/3  #this will give us one cluster for every three tasks
   #I am too lazy to do this properly using BIC or whatever.
+  neighbors = kmeans(@tasks, k, d) #this returns clusters
 
-  kmeans(@tasks, k, d) #this returns clusters
-
-  #this repeats the code in the the kmeans method - so it should be refactored
-  min_dist = +INFINITY
-  min_cluster = cluster
+  min_dist = 100
+  min_cluster = nil
 
   #Find the closest cluster
-  clusters.each do |cluster|
-    dist = @task.vector.dist_to(cluster.center)
+  neighbors.each do |neighbor|
+    dist = dist_to(@task.vector(@words), neighbor.center)
 
     if dist < min_dist
       min_dist = dist
-      min_cluster = cluster
+      min_cluster = neighbor
     end
   end
 
-  @task.context = min_cluster.find_context
+  @task.context_id = min_cluster.find_context
 
   @task.save!
   erb :index
 end
 
 post '/:id' do
+  binding.pry
   @task=Task.find_by(id: params[:id])
   @task.update(context_id: params[:categories])
 
@@ -70,17 +72,14 @@ end
 # METHODS
 ################
 
-def build_comparison(task_array)
-  words = []
-    task_array.each do |task|
-      words << task.arrayify(task.body)
-    end
-  words.flatten
+def dist_to(some, point)
+  zipped_array = some.zip(point)
+  dimensional_array = zipped_array.map { |x| (x[1] - x[0])**2}
+  sum = dimensional_array.reduce(:+)
+  Math.sqrt(sum)
 end
 
-#data must be an array of task objects
-
-def kmeans(data, k, d, delta=0.001)
+def kmeans(data, k, d, delta=0.01)
   clusters = []
 
   #Assign initial values for cluster points
@@ -94,19 +93,19 @@ def kmeans(data, k, d, delta=0.001)
   end
 
   #Reassign each cluster to average of its closest points until no changes
-  while true
+  i = 0
+  while i < 5
     #Assign task vectors to clusters
     data.each do |task|
-      min_dist = +INFINITY
+      min_dist = 100
       min_cluster = nil
-
       #Find the closest cluster
-      clusters.each do |cluster|
-        dist = task.vector.dist_to(cluster.center)
+      clusters.each do |z|
+        dist = dist_to(task.vector(@words), z.center)
 
         if dist < min_dist
           min_dist = dist
-          min_cluster = cluster
+          min_cluster = z
         end
       end
 
@@ -114,26 +113,31 @@ def kmeans(data, k, d, delta=0.001)
       min_cluster.tasks.push task
     end
 
-    #check deltas
-    max_delta = -INFINITY
+    # #check deltas
+    # max_delta = -100
+    #
+    # clusters.each do |cluster|
+    #   dist_moved = cluster.recenter!
+    #
+    #   #get the largest delta
+    #   if dist_moved > max_delta
+    #     max_delta = dist_moved
+    #   end
+    # end
 
-    clusters.each do |cluster|
-      dist_moved = cluster.recenter!
+    # #check exit condition
+    # if max_delta < delta
+    #   return clusters
+    # end
 
-      #get the largest delta
-      if dist_moved > max_delta
-        max_delta = dist_moved
-      end
-    end
-
-    #check exit condition
-    if max_delta < delta
+    if i == 4
       return clusters
     end
 
     #reset points for the next iteration
-    clusters.each do |cluster|
-      cluster.tasks = []
+    clusters.each do |y|
+      y.tasks = []
     end
+    i += 1
   end
 end
