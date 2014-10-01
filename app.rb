@@ -60,9 +60,8 @@ post '/' do
 end
 
 post '/:id' do
-  binding.pry
-  @task=Task.find_by(id: params[:id])
-  @task.update(context_id: params[:categories])
+  @task=Task.find(params[:id])
+  @task.update!(context_id: params[:context])
 
   redirect '/'
 end
