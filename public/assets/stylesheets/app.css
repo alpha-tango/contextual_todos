@@ -37,10 +37,37 @@ input {
   box-shadow: 0 12px 0 -5px rgba(0,0,0,0.2);
 }
 
+.change-cat {
+  display: inline-block;
+}
+
 .todo-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
+  display: inline;
+}
+
+.todo-list li form {
+  display: inline-block;
+  float: right;
+}
+
+.todo-list li form input[type=submit] {
+  font-size: 80%;
+  background: #b6cace;
+  box-shadow: 0 9px 0 -5px rgba(0,0,0,0.1);
+  padding: 7px;
+}
+
+.change_cat {
+  -webkit-appearance: none;
+  -webkit-border-radius: 0px;
+  background-color: #96adb2;
+  font-size: 80%;
+  border: 2px solid #81979C;
+  padding: 7px;
+  color: #81979C;
 }
 
 .todo {
