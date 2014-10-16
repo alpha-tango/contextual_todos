@@ -4,6 +4,7 @@ $(function() {
 
     var data = $('.add-todo').serialize();
     var body = $('.add-todo input').val();
+    $('.add-todo input').val("");
 
     $.ajax({
       url: '/todos',
@@ -12,7 +13,6 @@ $(function() {
       success: function(json) {
         var $category = json.id;
         var $target = $('#' + $category).children('.todo-list');
-        console.log($target);
         var $listItem = $('<li>').addClass('todo');
         var $label = $('<label>')
           .addClass('label label--checkbox')
@@ -24,6 +24,7 @@ $(function() {
         $label.prepend($input);
         $listItem.append($label);
         $target.prepend($listItem);
+
       }
     });
   });

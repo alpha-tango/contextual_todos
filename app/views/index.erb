@@ -16,7 +16,7 @@
               class="checkbox <%= 'checkbox--checked' if task.complete? %>">
             <%= task.body %>
           </label>
-          <form action="/<%=task.id %>" method='post'>
+          <form class="recategorize" action="/<%=task.id %>" method='post'>
             <select class="change_cat" name='context'>
               <% @contexts.each do |cat| %>
                 <%if cat == task.context %>
