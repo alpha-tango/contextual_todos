@@ -26,7 +26,6 @@ get '/' do
 end
 
 patch '/todos' do
-  binding.pry
   @task = Task.find(params[:id])
   if params['checked'] == "checked"
     @task.update(complete: true)

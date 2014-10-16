@@ -25,7 +25,7 @@
 //     });
 //   });
 // });
-//
+
 $(function() {
   $('.checkbox').click(function () {
     var id = $(this).attr('id');
