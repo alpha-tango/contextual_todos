@@ -39,7 +39,7 @@ post '/todos' do
   @tasks = Task.order(created_at: :desc)
   @contexts = Context.all
   task_words = Task.all.pluck(:body)
-  @words = task_words.map{ |body| body.split(" ") }.flatten.uniq
+  @words = task_words.map { |body| body.split(" ") }.flatten.uniq
 
   d = @words.length
   k = @tasks.length/3  #this will give us one cluster for every three tasks
@@ -62,7 +62,8 @@ post '/todos' do
   @task.context_id = min_cluster.find_context
 
   @task.save!
-  redirect '/'
+  content_type :json
+  { id: @task.context_id.to_s }.to_json
 end
 
 post '/:id' do
