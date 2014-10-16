@@ -21,23 +21,29 @@ end
 
 get '/' do
   @contexts = Context.all
-  @tasks = Task.all
+  @tasks = Task.all.where(complete: false).order(created_at: :desc)
   erb :index
 end
 
-post '/' do
-  @task = Task.new(params[:todo])
-  @tasks = Task.all
-  @contexts = Context.all
-  words = Word.all
-  @words = []
-  words.each do |x|
-    @words << x.element
+patch '/todos' do
+  @task = Task.find(params[:id])
+  if params['checked'] == "checked"
+    @task.update(complete: true)
+  else
+    @task.update(complete: false)
   end
+end
+
+post '/todos' do
+  @task = Task.new(params[:todo])
+  @tasks = Task.order(created_at: :desc)
+  @contexts = Context.all
+  task_words = Task.all.pluck(:body)
+  @words = task_words.map{ |body| body.split(" ") }.flatten.uniq
 
   d = @words.length
   k = @tasks.length/3  #this will give us one cluster for every three tasks
-  #I am too lazy to do this properly using BIC or whatever.
+  #I still need to figure out how to do this properly
   neighbors = kmeans(@tasks, k, d) #this returns clusters
 
   min_dist = 100
@@ -56,7 +62,7 @@ post '/' do
   @task.context_id = min_cluster.find_context
 
   @task.save!
-  erb :index
+  redirect '/'
 end
 
 post '/:id' do

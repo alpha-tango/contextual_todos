@@ -1,34 +1,8 @@
 <h1>Todos</h1>
 
-<form class="add-todo" action='/' method='post'>
+<form class="add-todo" action='/todos' method='post'>
   <input name="todo[body]" type="text" placeholder="What do you want to get done?">
 </form>
-
-<h2>uncategorized</h2>
-<ul class="todo-list">
-<% @tasks.each do |task| %>
-  <% if task.context == nil %>
-    <li class="todo <%= 'todo--complete' if task.complete? %>">
-      <label class="label label--checkbox">
-        <input type="checkbox"
-          class="checkbox <%= 'checkbox--checked' if task.complete? %>">
-        <%= task.body %>
-      </label>
-      <form action=<%="/#{task.id}"%> method='post'>
-        <select class="change_cat" name='context'>
-          <% @contexts.each do |cat| %>
-            <%if cat == task.context %>
-              <option value ="<%= cat.id %>" selected><%= cat.name %></option>
-            <% else %>
-              <option value ="<%= cat.id %>"><%= cat.name %></option>
-            <% end %>
-          <% end %>
-        </select>
-        <input type="submit" value="submit">
-      </form>
-    </li>
-  <% end %>
-  <% end %>
 
 <% @contexts.each do |context| %>
   <h2><%= context.name || "uncategorized"%></h2>
@@ -37,8 +11,8 @@
     <% if task.context == context %>
       <li class="todo <%= 'todo--complete' if task.complete? %>">
         <label class="label label--checkbox">
-          <input type="checkbox"
-            class="checkbox <%= 'checkbox--checked' if task.complete? %>">
+          <input type="checkbox" id="<%= task.id %>"
+                 class="checkbox <%= 'checkbox--checked' if task.complete? %>">
           <%= task.body %>
         </label>
         <form action="/<%=task.id %>" method='post'>
@@ -51,7 +25,7 @@
               <% end %>
             <% end %>
           </select>
-          <!--input type="submit" value="submit"-->
+          <input type="submit" value="submit">
         </form>
       </li>
     <% end %>
