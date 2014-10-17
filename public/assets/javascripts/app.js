@@ -33,6 +33,9 @@ $(function() {
 
         $.each($options, function(i, option) {
           var $value = $("<option value=\""+ option.id +"\">" + option.name +"</option>");
+          if(option.id == $category){
+            $value.attr('selected', true);
+          };
           $selectBox.append($value);
         });
 
