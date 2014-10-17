@@ -12,7 +12,6 @@ $(function() {
       data: data,
       success: function(json) {
         var $category = json.context_id;
-        console.log(json.task_id);
         var $options = json.categories;
         var $target = $('#' + $category).children('.todo-list');
         var $listItem = $('<li>').addClass('todo');
@@ -54,9 +53,8 @@ $(function() {
 });
 
 $(function() {
-  $('.checkbox').click(function () {
+  $('ul').on('click', 'li label input.checkbox', function () {
     var id = $(this).attr('id');
-    console.log(this);
     if ($(this).hasClass('checkbox--checked')) {
       var checked = "unchecked";
     } else {
