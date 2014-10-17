@@ -12,6 +12,7 @@ $(function() {
       data: data,
       success: function(json) {
         var $category = json.context_id;
+        console.log(json.task_id);
         var $options = json.categories;
         var $target = $('#' + $category).children('.todo-list');
         var $listItem = $('<li>').addClass('todo');
@@ -20,7 +21,8 @@ $(function() {
           .text(body);
         var $checkbox = $('<input>')
           .addClass('checkbox')
-          .attr('type', 'checkbox');
+          .attr('type', 'checkbox')
+          .attr('id', json.task_id);
         var $selectWrapper = $('<form>')
           .addClass('recategorize')
           .attr('method', 'post')
