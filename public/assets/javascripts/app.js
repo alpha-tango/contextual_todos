@@ -28,9 +28,6 @@ $(function() {
           .attr('action', "/"+json.task_id);
         var $selectBox = $('<select name="context">')
           .addClass('change_cat');
-        var $submit = $('<input>')
-          .attr('type', 'submit')
-          .val('submit');
 
         $.each($options, function(i, option) {
           var $value = $("<option value=\""+ option.id +"\">" + option.name +"</option>");
@@ -41,7 +38,6 @@ $(function() {
         });
 
         $selectWrapper.append($selectBox);
-        $selectWrapper.append($submit);
         $label.prepend($checkbox);
         $listItem.append($label);
         $listItem.append($selectWrapper);
@@ -71,6 +67,25 @@ $(function() {
         $(this).toggleClass('checkbox--checked');
         var todo = $(this).parent().parent();
         $(todo).toggleClass('todo--complete');
+      }
+    });
+  });
+});
+
+$(function() {
+  $('ul').on('change', 'li form select', function() {
+    var $selected = $('option:selected', this);
+    var $url = $(this).parent().attr('action');
+    var data = {'context': $selected.val()};
+
+    $.ajax({
+      url: $url,
+      type: 'POST',
+      data: data,
+      context: this,
+      success: function(confirmation) {
+        console.log(confirmation);
+        console.log(this);
       }
     });
   });

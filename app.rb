@@ -78,7 +78,8 @@ post '/:id' do
   @task=Task.find(params[:id])
   @task.update!(context_id: params[:context])
 
-  redirect '/'
+  content_type :json
+  {context_id: @task.context_id }.to_json
 end
 
 
