@@ -11,10 +11,8 @@ $(function() {
       type: 'POST',
       data: data,
       success: function(json) {
-        var $category = json.id;
-        var $options = [{category: "phone", id: 1},
-                        {category: "errands", id: 4}];
-        console.log($options);
+        var $category = json.context_id;
+        var $options = json.categories;
         var $target = $('#' + $category).children('.todo-list');
         var $listItem = $('<li>').addClass('todo');
         var $label = $('<label>')
@@ -25,7 +23,8 @@ $(function() {
           .attr('type', 'checkbox');
         var $selectWrapper = $('<form>')
           .addClass('recategorize')
-          .attr('method', 'post');
+          .attr('method', 'post')
+          .attr('action', "/"+json.task_id);
         var $selectBox = $('<select name="context">')
           .addClass('change_cat');
         var $submit = $('<input>')
@@ -33,7 +32,7 @@ $(function() {
           .val('submit');
 
         $.each($options, function(i, option) {
-          var $value = $("<option value=\""+ option.id +"\">" + option.category +"</option>");
+          var $value = $("<option value=\""+ option.id +"\">" + option.name +"</option>");
           $selectBox.append($value);
         });
 

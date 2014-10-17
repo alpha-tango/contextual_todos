@@ -62,8 +62,16 @@ post '/todos' do
   @task.context_id = min_cluster.find_context
 
   @task.save!
+  @jquery_contexts = []
+
+  @contexts.each do |context|
+    @jquery_contexts << { category: context.name, id: context.id }
+  end
+
   content_type :json
-  { id: @task.context_id.to_s }.to_json
+  { context_id: @task.context_id.to_s,
+    task_id: @task.id.to_s,
+    categories: @contexts }.to_json
 end
 
 post '/:id' do
