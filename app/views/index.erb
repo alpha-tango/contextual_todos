@@ -10,7 +10,7 @@
     <ul class="todo-list">
     <% @tasks.each do |task| %>
       <% if task.context == context %>
-        <li class="todo <%= 'todo--complete' if task.complete? %>">
+        <li class="todo<%= 'todo--complete' if task.complete? %>">
           <label class="label label--checkbox">
             <input type="checkbox" id="<%= task.id %>"
               class="checkbox <%= 'checkbox--checked' if task.complete? %>">
