@@ -20,23 +20,19 @@ end
 #####################
 
 get '/' do
-  @contexts = Context.all
-  @tasks = Task.all.where(complete: false).order(created_at: :desc)
+  @contexts = Context.includes(:tasks).where('tasks.complete = ?', 'false')
+    .references(:tasks)
   erb :index
 end
 
 patch '/todos' do
   @task = Task.find(params[:id])
-  if params['checked'] == "checked"
-    @task.update(complete: true)
-  else
-    @task.update(complete: false)
-  end
+  @task.update_complete(params['checked'])
 end
 
 post '/todos' do
   @task = Task.new(params[:todo])
-  @tasks = Task.order(created_at: :desc)
+  @tasks = Task.all
   @contexts = Context.all
   task_words = Task.all.pluck(:body)
   @words = task_words.map { |body| body.split(" ") }.flatten.uniq

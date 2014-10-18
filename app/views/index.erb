@@ -8,28 +8,26 @@
   <div id=<%=context.id %>>
     <h2><%= context.name || "uncategorized"%></h2>
     <ul class="todo-list">
-    <% @tasks.each do |task| %>
-      <% if task.context == context %>
-        <li class="todo<%= 'todo--complete' if task.complete? %>">
-          <label class="label label--checkbox">
-            <input type="checkbox" id="<%= task.id %>"
-              class="checkbox <%= 'checkbox--checked' if task.complete? %>">
-            <%= task.body %>
-          </label>
-          <form class="recategorize" action="/<%=task.id %>" method='post'>
-            <select class="change_cat" name='context'>
-              <% @contexts.each do |cat| %>
-                <%if cat == task.context %>
-                  <option value ="<%= cat.id %>"
-                          selected><%= cat.name %></option>
-                <% else %>
-                  <option value ="<%= cat.id %>"><%= cat.name %></option>
-                <% end %>
+    <% context.tasks.each do |task| %>
+      <li class="todo<%= 'todo--complete' if task.complete? %>">
+        <label class="label label--checkbox">
+          <input type="checkbox" id="<%= task.id %>"
+            class="checkbox <%= 'checkbox--checked' if task.complete? %>">
+          <%= task.body %>
+        </label>
+        <form class="recategorize" action="/<%=task.id %>" method='post'>
+          <select class="change_cat" name='context'>
+            <% @contexts.each do |cat| %>
+              <%if cat == task.context %>
+                <option value ="<%= cat.id %>"
+                        selected><%= cat.name %></option>
+              <% else %>
+                <option value ="<%= cat.id %>"><%= cat.name %></option>
               <% end %>
-            </select>
-          </form>
-        </li>
-      <% end %>
+            <% end %>
+          </select>
+        </form>
+      </li>
     <% end %>
     </ul>
   </div>
