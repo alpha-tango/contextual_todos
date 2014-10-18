@@ -84,8 +84,10 @@ $(function() {
       data: data,
       context: this,
       success: function(confirmation) {
-        console.log(confirmation);
-        console.log(this);
+        $listItem = $(this).parent().parent();
+        $category = confirmation.context_id;
+        var $target = $('#' + $category).children('.todo-list');
+        $target.prepend($listItem);
       }
     });
   });
