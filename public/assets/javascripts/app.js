@@ -30,7 +30,7 @@ $(function() {
           .addClass('change_cat');
 
         $.each($options, function(i, option) {
-          var $value = $("<option value=\""+ option.id +"\">" + option.name +"</option>");
+          var $value = $("<option value=\""+ option.id +"\">" + option.category +"</option>");
           if(option.id == $category){
             $value.attr('selected', true);
           };

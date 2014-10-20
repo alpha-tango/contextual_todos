@@ -20,8 +20,7 @@ end
 #####################
 
 get '/' do
-  @contexts = Context.includes(:tasks).where('tasks.complete = ?', 'false')
-    .references(:tasks)
+  @contexts = Context.includes(:tasks).all
   erb :index
 end
 
@@ -39,9 +38,7 @@ post '/todos' do
 
   d = @words.length
   k = @tasks.length/3  #this will give us one cluster for every three tasks
-  #I still need to figure out how to do this properly
   neighbors = kmeans(@tasks, k, d) #this returns clusters
-
   min_dist = 100
   min_cluster = nil
 
@@ -67,7 +64,7 @@ post '/todos' do
   content_type :json
   { context_id: @task.context_id.to_s,
     task_id: @task.id.to_s,
-    categories: @contexts }.to_json
+    categories: @jquery_contexts }.to_json
 end
 
 post '/:id' do
@@ -75,7 +72,7 @@ post '/:id' do
   @task.update!(context_id: params[:context])
 
   content_type :json
-  {context_id: @task.context_id }.to_json
+  {context_id: @task.context.id }.to_json
 end
 
 

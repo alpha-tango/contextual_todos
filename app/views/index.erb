@@ -8,11 +8,11 @@
   <div id=<%=context.id %>>
     <h2><%= context.name || "uncategorized"%></h2>
     <ul class="todo-list">
-    <% context.tasks.each do |task| %>
-      <li class="todo<%= 'todo--complete' if task.complete? %>">
+    <% context.tasks.where('complete = ?', 'false').each do |task| %>
+      <li class="todo">
         <label class="label label--checkbox">
           <input type="checkbox" id="<%= task.id %>"
-            class="checkbox <%= 'checkbox--checked' if task.complete? %>">
+            class="checkbox">
           <%= task.body %>
         </label>
         <form class="recategorize" action="/<%=task.id %>" method='post'>
