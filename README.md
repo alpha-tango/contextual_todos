@@ -1,10 +1,3 @@
-### Todo
-
-Add Jquery/Ajax 
-Style dropdown list
-Refactor
-
-
 
 
 ### Getting Started
